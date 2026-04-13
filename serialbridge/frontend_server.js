@@ -25,7 +25,8 @@ const crypto = require('crypto');
 const WebSocket = require('ws');
 const pluginsApi = require('../../server/plugins_api');
 const helpers = require('../../server/helpers');
-const dataHandler = require('../../server/datahandler');
+let dataHandler = null;
+try { dataHandler = require('../../server/datahandler'); } catch (_) { /* older webserver */ }
 const { logInfo, logWarn, logError } = require('../../server/console');
 const pjson = require('../../package.json');
 
@@ -122,9 +123,11 @@ function sendPostAuthBanner(ws) {
         ws.send(`$fmdx-webserver,${pjson.version},${httpPort},/audio\n`);
     }
 
-    const freqMhz = parseFloat(dataHandler.dataToSend.freq);
-    if (!isNaN(freqMhz) && freqMhz > 0) {
-        ws.send(`T${Math.round(freqMhz * 1000)}\n`);
+    if (dataHandler && dataHandler.dataToSend) {
+        const freqMhz = parseFloat(dataHandler.dataToSend.freq);
+        if (!isNaN(freqMhz) && freqMhz > 0) {
+            ws.send(`T${Math.round(freqMhz * 1000)}\n`);
+        }
     }
 }
 
