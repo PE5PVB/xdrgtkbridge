@@ -1,6 +1,0 @@
-{
-  "listenHost": "::",
-  "listenPort": 7373,
-  "password": "fietsbel",
-  "authTimeoutMs": 5000
-}
